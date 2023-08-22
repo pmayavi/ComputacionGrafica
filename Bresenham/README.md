@@ -1,5 +1,5 @@
 # ComputacionGrafica
-Trabajo de Pablo Maya Villegas
+Trabajo de Pablo Maya Villegas y Andres Echeverri Jaramillo
 
 1024 lineas, con 4 repeticiones del color en velocidad rapida:  
 ![4 Color rapido](https://raw.githubusercontent.com/pmayavi/ComputacionGrafica/main/Bresenham/4Fast.gif)
