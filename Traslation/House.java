@@ -42,23 +42,19 @@ public class House extends JPanel implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int tecla = e.getKeyCode();
+        int tx = 0, ty = 0;
         // System.out.println("Key pressed");
-        if (tecla == KeyEvent.VK_W) {
-            for (int i = 0; i < points.length; i++) {
-                points[i] = traslation(points[i], 0, SPEED);
-            }
-        } else if (tecla == KeyEvent.VK_S) {
-            for (int i = 0; i < points.length; i++) {
-                points[i] = traslation(points[i], 0, -SPEED);
-            }
-        } else if (tecla == KeyEvent.VK_D) {
-            for (int i = 0; i < points.length; i++) {
-                points[i] = traslation(points[i], SPEED, 0);
-            }
-        } else if (tecla == KeyEvent.VK_A) {
-            for (int i = 0; i < points.length; i++) {
-                points[i] = traslation(points[i], -SPEED, 0);
-            }
+        if (tecla == KeyEvent.VK_W)
+            ty += SPEED;
+        if (tecla == KeyEvent.VK_S)
+            ty -= SPEED;
+        if (tecla == KeyEvent.VK_D)
+            tx += SPEED;
+        if (tecla == KeyEvent.VK_A)
+            tx -= SPEED;
+
+        for (int i = 0; i < points.length; i++) {
+            points[i] = traslation(points[i], tx, ty);
         }
     }
 
