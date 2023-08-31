@@ -16,7 +16,7 @@ public class Matrix {
         cols = c;
     }
 
-    public static Point3 times(Matrix mat, Point3 p) {
+    public Point3 times(Matrix mat, Point3 p) {
         double result[] = new double[mat.rows];
 
         for (int i = 0; i < mat.rows; i++) {
