@@ -27,8 +27,8 @@ public class House extends JPanel implements KeyListener {
     List<Integer> lineas;
     Point3 points[];
     Point3 base_points[];
-    int X_MOVMENT=0;
-    int Y_MOVMENT=0;
+    int X_MOVMENT = 0;
+    int Y_MOVMENT = 0;
 
     public House() {
         points = new Point3[0];
@@ -47,63 +47,60 @@ public class House extends JPanel implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int tecla = e.getKeyCode();
         int tx = 0, ty = 0;
-        double sx=0, sy=0;
+        double sx = 0, sy = 0;
         double angle = 0;
-        boolean rotation_happen=false, scaling=false;
+        boolean rotation_happen = false, scaling = false;
         // System.out.println("Key pressed");
-        if (tecla == KeyEvent.VK_W){
+        if (tecla == KeyEvent.VK_W) {
             ty += SPEED;
-            Y_MOVMENT+=SPEED;
-        }
-        if (tecla == KeyEvent.VK_S){
+            Y_MOVMENT += SPEED;
+        } else if (tecla == KeyEvent.VK_S) {
             ty -= SPEED;
-            Y_MOVMENT-=SPEED;
-        }
-        if (tecla == KeyEvent.VK_D){
+            Y_MOVMENT -= SPEED;
+        } else if (tecla == KeyEvent.VK_D) {
             tx += SPEED;
-            X_MOVMENT+=SPEED;
-        }
-        if (tecla == KeyEvent.VK_A){
+            X_MOVMENT += SPEED;
+        } else if (tecla == KeyEvent.VK_A) {
             tx -= SPEED;
-            X_MOVMENT-=SPEED;
+            X_MOVMENT -= SPEED;
         }
-
-        for (int i = 0; i < points.length; i++) {
-            points[i] = traslation(points[i], tx, ty);
+        if (tx != 0 || ty != 0) {
+            for (int i = 0; i < points.length; i++) {
+                points[i] = traslation(points[i], tx, ty);
+            }
         }
-        if (tecla == KeyEvent.VK_Q){
+        if (tecla == KeyEvent.VK_Q) {
             angle += ROTATION_ANGLE;
-            rotation_happen=true;
-        }
-        if (tecla == KeyEvent.VK_E){
+            rotation_happen = true;
+        } else if (tecla == KeyEvent.VK_E) {
             angle -= ROTATION_ANGLE;
-            rotation_happen=true;
+            rotation_happen = true;
         }
         for (int i = 0; i < points.length; i++) {
             base_points[i] = rotation(base_points[i], angle);
         }
-        if (rotation_happen){
-        for(int i = 0; i < points.length; i++){
-            points[i] = traslation(base_points[i], X_MOVMENT, Y_MOVMENT);
+        if (rotation_happen) {
+            for (int i = 0; i < points.length; i++) {
+                points[i] = traslation(base_points[i], X_MOVMENT, Y_MOVMENT);
             }
         }
-        if (tecla == KeyEvent.VK_M){
+        if (tecla == KeyEvent.VK_M) {
             sx += INCREASE;
             sy += INCREASE;
-            scaling=true;
+            scaling = true;
 
         }
-        if (tecla == KeyEvent.VK_N){
-            sx += (double)1/INCREASE;
-            sy += (double)1/INCREASE;
-            scaling=true;
+        if (tecla == KeyEvent.VK_N) {
+            sx += (double) 1 / INCREASE;
+            sy += (double) 1 / INCREASE;
+            scaling = true;
         }
-        if (scaling){
+        if (scaling) {
             for (int i = 0; i < points.length; i++) {
                 base_points[i] = scaling(base_points[i], sx, sy);
             }
-        for(int i = 0; i < points.length; i++){
-            points[i] = traslation(base_points[i], X_MOVMENT, Y_MOVMENT);
+            for (int i = 0; i < points.length; i++) {
+                points[i] = traslation(base_points[i], X_MOVMENT, Y_MOVMENT);
             }
         }
     }
@@ -147,7 +144,7 @@ public class House extends JPanel implements KeyListener {
         int yj2 = HEIGHT / 2 - (int) y2;
         g.drawLine(xj1, yj1, xj2, yj2);
     }
-    
+
     public Point3 rotation(Point3 point, double angle) {
         Matrix mat = new Matrix(3);
         mat.matrix[0][0] = Math.cos(angle);

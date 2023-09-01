@@ -21,4 +21,13 @@ public class Point3 {
         y = arr[1];
         w = arr[2];
     }
+
+    public void sum(Point3 p) {
+        x += p.x;
+        y += p.y;
+    }
+
+    public void print() {
+        System.out.println("x: " + x + " y: " + y + " w: " + w);
+    }
 }

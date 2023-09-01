@@ -2,6 +2,7 @@ package Traslation;
 
 import Math.Point3;
 import Math.Matrix;
+import Math.Vector3;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +20,21 @@ import java.awt.geom.Ellipse2D;
 public class Car extends JPanel implements KeyListener {
     public static final int WIDTH = 640;
     public static final int HEIGHT = 480;
-    private static final int SPEED = 10;
+    private static final double SPEED = 10;
+    private static final double INCREASE = 1.1;
     private static final int FRAMES = 1;
+    private static final double ROTATION_ANGLE = Math.toRadians(5);
     Ellipse2D.Double house;
     List<Integer> lineas;
     Point3 points[];
+    Point3 base_points[];
+    int X_MOVMENT = 0;
+    int Y_MOVMENT = 0;
+    double current_angle = 0;
+    Vector3 vectors[];
 
     public Car() {
+        vectors = new Vector3[0];
         points = new Point3[0];
         lineas = new ArrayList<>();
         house = new Ellipse2D.Double(10, 10, 50, 50);
@@ -35,31 +44,67 @@ public class Car extends JPanel implements KeyListener {
         ejercicio("DrawFile/archivo.txt");
         this.setFocusable(true);
         this.requestFocusInWindow();
-
         this.addKeyListener(this);
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
         int tecla = e.getKeyCode();
+        double tx = 0, ty = 0;
+        double sx = 0, sy = 0;
+        double angle = 0;
+        boolean rotation_happen = false, scaling = false;
         // System.out.println("Key pressed");
         if (tecla == KeyEvent.VK_W) {
-            for (int i = 0; i < points.length; i++) {
-                points[i] = traslation(points[i], 0, SPEED);
-            }
+            ty += SPEED;
         } else if (tecla == KeyEvent.VK_S) {
+            ty -= SPEED;
+        }
+        if (tx != 0 || ty != 0) {
             for (int i = 0; i < points.length; i++) {
-                points[i] = traslation(points[i], 0, -SPEED);
-            }
-        } else if (tecla == KeyEvent.VK_D) {
-            for (int i = 0; i < points.length; i++) {
-                points[i] = traslation(points[i], SPEED, 0);
-            }
-        } else if (tecla == KeyEvent.VK_A) {
-            for (int i = 0; i < points.length; i++) {
-                points[i] = traslation(points[i], -SPEED, 0);
+                rotatrans(points[i], (int) tx, (int) ty, current_angle);
             }
         }
+        if (tecla == KeyEvent.VK_Q) {
+            angle += ROTATION_ANGLE;
+            current_angle += ROTATION_ANGLE;
+            rotation_happen = true;
+        }
+        if (tecla == KeyEvent.VK_E) {
+            angle -= ROTATION_ANGLE;
+            current_angle -= ROTATION_ANGLE;
+            rotation_happen = true;
+        }
+        for (int i = 0; i < points.length; i++) {
+            base_points[i] = rotation(base_points[i], angle);
+        }
+        if (rotation_happen) {
+            for (int i = 0; i < points.length; i++) {
+                points[i] = traslation(base_points[i], X_MOVMENT, Y_MOVMENT);
+            }
+        }
+        if (tecla == KeyEvent.VK_M) {
+            sx += INCREASE;
+            sy += INCREASE;
+            scaling = true;
+
+        }
+        if (tecla == KeyEvent.VK_N) {
+            sx += (double) 1 / INCREASE;
+            sy += (double) 1 / INCREASE;
+            scaling = true;
+        }
+        if (scaling) {
+            for (int i = 0; i < points.length; i++) {
+                base_points[i] = scaling(base_points[i], sx, sy);
+            }
+            for (int i = 0; i < points.length; i++) {
+                points[i] = traslation(base_points[i], X_MOVMENT + (int) SPEED, Y_MOVMENT + (int) SPEED);
+            }
+        }
+        System.out.println(
+                "angle: " + current_angle + ", tx: " + tx + ", ty: " + ty + ", X: " + X_MOVMENT + ", Y: " + Y_MOVMENT);
+        System.out.println((1 + (current_angle / 90)));
     }
 
     @Override
@@ -83,9 +128,9 @@ public class Car extends JPanel implements KeyListener {
 
     public void drawAxis(Graphics g) {
         g.setColor(Color.red);
-        myDrawLine(g, -100, 0, 100, 0);
+        myDrawLine(g, -1000, 0, 1000, 0);
         g.setColor(Color.green);
-        myDrawLine(g, 0, -100, 0, 100);
+        myDrawLine(g, 0, -1000, 0, 1000);
     }
 
     public void myDrawPoint(Graphics g, int x, int y) {
@@ -102,6 +147,25 @@ public class Car extends JPanel implements KeyListener {
         g.drawLine(xj1, yj1, xj2, yj2);
     }
 
+    public void rotatrans(Point3 point, int tx, int ty, double angle) {
+        Point3 move = new Point3(tx, ty, 1);
+        move = rotation(move, angle);
+        Y_MOVMENT += move.y / 5;
+        X_MOVMENT += move.x / 5;
+        point.sum(move);
+    }
+
+    public Point3 rotation(Point3 point, double angle) {
+        Matrix mat = new Matrix(3);
+        mat.matrix[0][0] = Math.cos(angle);
+        mat.matrix[0][1] = -Math.sin(angle);
+        mat.matrix[1][0] = Math.sin(angle);
+        mat.matrix[1][1] = Math.cos(angle);
+        mat.matrix[2][2] = 1;
+
+        return mat.times(mat, point);
+    }
+
     public Point3 traslation(Point3 point, int tx, int ty) {
         Matrix mat = new Matrix(3);
         mat.matrix[0][0] = 1;
@@ -113,17 +177,31 @@ public class Car extends JPanel implements KeyListener {
         return mat.times(mat, point);
     }
 
+    public Point3 scaling(Point3 point, double sx, double sy) {
+        Matrix mat = new Matrix(3);
+        mat.matrix[0][0] = sx;
+        mat.matrix[1][1] = sy;
+        mat.matrix[2][2] = 1;
+
+        return mat.times(mat, point);
+    }
+
     public void ejercicio(String fileName) {
         try {
             Scanner scanner = new Scanner(new File("DrawFile/archivo.txt"));
             int numPoints = scanner.nextInt();
             points = new Point3[numPoints];
+            vectors = new Vector3[numPoints];
+            base_points = new Point3[numPoints];
             for (int i = 0; i < numPoints; i++) {
                 int x = scanner.nextInt();
                 int y = scanner.nextInt();
 
                 Point3 point = new Point3(x, y, 1);
+                Point3 base_point = new Point3(x, y, 1);
                 points[i] = point;
+                vectors[i] = new Vector3(x, y, 1);
+                base_points[i] = base_point;
             }
             int numLines = scanner.nextInt();
             for (int i = 1; i <= numLines; i++) {
@@ -144,7 +222,7 @@ public class Car extends JPanel implements KeyListener {
         // Al cerrar el frame, termina la ejecución de este programa
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // Agregar un JPanel que se llama Points (esta clase)
-        frame.add(new House());
+        frame.add(new Car());
         // Asignarle tamaño
         frame.setSize(WIDTH, HEIGHT);
         // Poner el frame en el centro de la pantalla
