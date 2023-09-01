@@ -20,10 +20,15 @@ public class House extends JPanel implements KeyListener {
     public static final int WIDTH = 640;
     public static final int HEIGHT = 480;
     private static final int SPEED = 10;
+    private static final int INCREASE = 2;
     private static final int FRAMES = 1;
+    private static final double ROTATION_ANGLE = Math.toRadians(5);
     Ellipse2D.Double house;
     List<Integer> lineas;
     Point3 points[];
+    Point3 base_points[];
+    int X_MOVMENT=0;
+    int Y_MOVMENT=0;
 
     public House() {
         points = new Point3[0];
@@ -35,7 +40,6 @@ public class House extends JPanel implements KeyListener {
         ejercicio("DrawFile/archivo.txt");
         this.setFocusable(true);
         this.requestFocusInWindow();
-
         this.addKeyListener(this);
     }
 
@@ -43,18 +47,64 @@ public class House extends JPanel implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int tecla = e.getKeyCode();
         int tx = 0, ty = 0;
+        double sx=0, sy=0;
+        double angle = 0;
+        boolean rotation_happen=false, scaling=false;
         // System.out.println("Key pressed");
-        if (tecla == KeyEvent.VK_W)
+        if (tecla == KeyEvent.VK_W){
             ty += SPEED;
-        if (tecla == KeyEvent.VK_S)
+            Y_MOVMENT+=SPEED;
+        }
+        if (tecla == KeyEvent.VK_S){
             ty -= SPEED;
-        if (tecla == KeyEvent.VK_D)
+            Y_MOVMENT-=SPEED;
+        }
+        if (tecla == KeyEvent.VK_D){
             tx += SPEED;
-        if (tecla == KeyEvent.VK_A)
+            X_MOVMENT+=SPEED;
+        }
+        if (tecla == KeyEvent.VK_A){
             tx -= SPEED;
+            X_MOVMENT-=SPEED;
+        }
 
         for (int i = 0; i < points.length; i++) {
             points[i] = traslation(points[i], tx, ty);
+        }
+        if (tecla == KeyEvent.VK_Q){
+            angle += ROTATION_ANGLE;
+            rotation_happen=true;
+        }
+        if (tecla == KeyEvent.VK_E){
+            angle -= ROTATION_ANGLE;
+            rotation_happen=true;
+        }
+        for (int i = 0; i < points.length; i++) {
+            base_points[i] = rotation(base_points[i], angle);
+        }
+        if (rotation_happen){
+        for(int i = 0; i < points.length; i++){
+            points[i] = traslation(base_points[i], X_MOVMENT, Y_MOVMENT);
+            }
+        }
+        if (tecla == KeyEvent.VK_M){
+            sx += INCREASE;
+            sy += INCREASE;
+            scaling=true;
+
+        }
+        if (tecla == KeyEvent.VK_N){
+            sx += (double)1/INCREASE;
+            sy += (double)1/INCREASE;
+            scaling=true;
+        }
+        if (scaling){
+            for (int i = 0; i < points.length; i++) {
+                base_points[i] = scaling(base_points[i], sx, sy);
+            }
+        for(int i = 0; i < points.length; i++){
+            points[i] = traslation(base_points[i], X_MOVMENT, Y_MOVMENT);
+            }
         }
     }
 
@@ -79,9 +129,9 @@ public class House extends JPanel implements KeyListener {
 
     public void drawAxis(Graphics g) {
         g.setColor(Color.red);
-        myDrawLine(g, -100, 0, 100, 0);
+        myDrawLine(g, -1000, 0, 1000, 0);
         g.setColor(Color.green);
-        myDrawLine(g, 0, -100, 0, 100);
+        myDrawLine(g, 0, -1000, 0, 1000);
     }
 
     public void myDrawPoint(Graphics g, int x, int y) {
@@ -97,6 +147,17 @@ public class House extends JPanel implements KeyListener {
         int yj2 = HEIGHT / 2 - (int) y2;
         g.drawLine(xj1, yj1, xj2, yj2);
     }
+    
+    public Point3 rotation(Point3 point, double angle) {
+        Matrix mat = new Matrix(3);
+        mat.matrix[0][0] = Math.cos(angle);
+        mat.matrix[0][1] = -Math.sin(angle);
+        mat.matrix[1][0] = Math.sin(angle);
+        mat.matrix[1][1] = Math.cos(angle);
+        mat.matrix[2][2] = 1;
+
+        return mat.times(mat, point);
+    }
 
     public Point3 traslation(Point3 point, int tx, int ty) {
         Matrix mat = new Matrix(3);
@@ -109,17 +170,29 @@ public class House extends JPanel implements KeyListener {
         return mat.times(mat, point);
     }
 
+    public Point3 scaling(Point3 point, double sx, double sy) {
+        Matrix mat = new Matrix(3);
+        mat.matrix[0][0] = sx;
+        mat.matrix[1][1] = sy;
+        mat.matrix[2][2] = 1;
+
+        return mat.times(mat, point);
+    }
+
     public void ejercicio(String fileName) {
         try {
             Scanner scanner = new Scanner(new File("DrawFile/archivo.txt"));
             int numPoints = scanner.nextInt();
             points = new Point3[numPoints];
+            base_points = new Point3[numPoints];
             for (int i = 0; i < numPoints; i++) {
                 int x = scanner.nextInt();
                 int y = scanner.nextInt();
 
                 Point3 point = new Point3(x, y, 1);
+                Point3 base_point = new Point3(x, y, 1);
                 points[i] = point;
+                base_points[i] = base_point;
             }
             int numLines = scanner.nextInt();
             for (int i = 1; i <= numLines; i++) {
