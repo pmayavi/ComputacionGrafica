@@ -20,7 +20,7 @@ public class House extends JPanel implements KeyListener {
     public static final int WIDTH = 640;
     public static final int HEIGHT = 480;
     private static final int SPEED = 10;
-    private static final int INCREASE = 2;
+    private static final double INCREASE = 1.1;
     private static final int FRAMES = 1;
     private static final double ROTATION_ANGLE = Math.toRadians(5);
     Ellipse2D.Double house;
