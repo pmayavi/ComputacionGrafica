@@ -41,7 +41,7 @@ public class Car extends JPanel implements KeyListener {
         // El panel, por defecto no es "focusable".
         // Hay que incluir estas líneas para que el panel pueda
         // agregarse como KeyListsener.
-        ejercicio("DrawFile/archivo.txt");
+        ejercicio("archivo.txt");
         this.setFocusable(true);
         this.requestFocusInWindow();
         this.addKeyListener(this);
@@ -188,7 +188,7 @@ public class Car extends JPanel implements KeyListener {
 
     public void ejercicio(String fileName) {
         try {
-            Scanner scanner = new Scanner(new File("DrawFile/archivo.txt"));
+            Scanner scanner = new Scanner(new File("archivo.txt"));
             int numPoints = scanner.nextInt();
             points = new Point3[numPoints];
             vectors = new Vector3[numPoints];
