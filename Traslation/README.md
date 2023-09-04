@@ -4,8 +4,8 @@
 Traslacion, Rotacion y Scaling:  
 ![Traslacion, Rotacion y Scaling GIF](https://raw.githubusercontent.com/pmayavi/ComputacionGrafica/main/Traslation/TraslacionRotacionScaling.gif)  
 
-Carro:
+Carro:  
 ![Car GIF](https://raw.githubusercontent.com/pmayavi/ComputacionGrafica/main/Traslation/Car.gif) 
 
-Serpientica:
+Serpientica:  
 ![Snake GIF](https://raw.githubusercontent.com/pmayavi/ComputacionGrafica/main/Traslation/Snake.gif) 
