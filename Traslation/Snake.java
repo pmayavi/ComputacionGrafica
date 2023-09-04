@@ -16,12 +16,12 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class Snake extends JPanel implements KeyListener {
-    public static final int WIDTH = 240;
-    public static final int HEIGHT = 180;
+    public static final int WIDTH = 480;
+    public static final int HEIGHT = 360;
     private static final int BORDER = 20;
     private static final int SIZE = 10;
     private static final int SPEED = 10;
-    private static final int FRAMES = 200;
+    private static final int FRAMES = 100;
     private static final int STARTER_SIZE = 10;
     Random random;
     boolean running;
