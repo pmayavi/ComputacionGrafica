@@ -1,13 +1,13 @@
 package Traslation;
 
-// Pablo Maya Villegas
-import Math.Point3;
-import Math.Matrix;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
+
+import math.Matrix;
+import math.Point3;
+
 import javax.swing.JFrame;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

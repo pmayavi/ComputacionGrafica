@@ -1,4 +1,4 @@
-package Math;
+package math;
 
 public class Matrix {
     public double matrix[][];

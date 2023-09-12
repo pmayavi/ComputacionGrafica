@@ -1,8 +1,5 @@
 package Traslation;
 
-import Math.Point3;
-import Math.Matrix;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -11,6 +8,10 @@ import java.io.FileNotFoundException;
 import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;
+
+import math.Matrix;
+import math.Point3;
+
 import javax.swing.JFrame;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
