@@ -17,10 +17,13 @@ public class Main extends JPanel
 
   static final int WIDTH = 800;
   static final int HEIGHT = 600;
+  public double u = 0, v = 0, n = 0;
+  public double cameraTy = 0, cameraTx = 0;
 
   Graphics g;
 
   PolygonObject po;
+  PolygonObject axis;
 
   public Main() {
     setFocusable(true);
@@ -33,18 +36,23 @@ public class Main extends JPanel
     super.paintComponent(g);
 
     this.g = g;
-
-    g.setColor(Color.RED);
-    drawOneLine(-100, 0, 100, 0);
-
-    g.setColor(Color.GREEN);
-    drawOneLine(0, -100, 0, 100);
+    axis.transformObject(u, v, n, cameraTx, cameraTy);
+    axis.projectObject();
+    axis.drawColor(g);
 
     g.setColor(Color.BLACK);
-    po.transformObject();
+    po.transformObject(u, v, n, cameraTx, cameraTy);
     po.projectObject();
     po.draw();
 
+  }
+
+  public void drawAxis(Graphics g) {
+    g.setColor(Color.RED);
+    drawOneLine(-100 + (int) u, (int) v, 100 + (int) u, (int) v);
+
+    g.setColor(Color.GREEN);
+    drawOneLine((int) u, -100 + (int) v, (int) u, 100 + (int) v);
   }
 
   public void drawOneLine(int x1, int y1, int x2, int y2) {
@@ -62,51 +70,91 @@ public class Main extends JPanel
   @Override
   public void keyPressed(KeyEvent e) {
     int key = e.getKeyCode();
-    if (key == KeyEvent.VK_D) {
-      po.ot.dx += ObjectTransformation.DELTA_TRANSL;
-      repaint();
-    } else if (key == KeyEvent.VK_A) {
-      po.ot.dx -= ObjectTransformation.DELTA_TRANSL;
-      repaint();
-    } else if (key == KeyEvent.VK_W) {
-      po.ot.dy += ObjectTransformation.DELTA_TRANSL;
-      repaint();
-    } else if (key == KeyEvent.VK_S) {
-      po.ot.dy -= ObjectTransformation.DELTA_TRANSL;
-      repaint();
-    } else if (key == KeyEvent.VK_Q) {
-      po.ot.sx += ObjectTransformation.DELTA_SCAL;
-      po.ot.sy += ObjectTransformation.DELTA_SCAL;
-      po.ot.sz += ObjectTransformation.DELTA_SCAL;
-      repaint();
-    } else if (key == KeyEvent.VK_E) {
-      po.ot.sx -= ObjectTransformation.DELTA_SCAL;
-      po.ot.sy -= ObjectTransformation.DELTA_SCAL;
-      po.ot.sz -= ObjectTransformation.DELTA_SCAL;
-      repaint();
-    } else if (key == KeyEvent.VK_R) {
-      po.ot.thetaX += ObjectTransformation.DELTA_ROT;
-      repaint();
-    } else if (key == KeyEvent.VK_F) {
-      po.ot.thetaX -= ObjectTransformation.DELTA_ROT;
-      repaint();
-    } else if (key == KeyEvent.VK_T) {
-      po.ot.thetaY += ObjectTransformation.DELTA_ROT;
-      repaint();
-    } else if (key == KeyEvent.VK_G) {
-      po.ot.thetaY -= ObjectTransformation.DELTA_ROT;
-      repaint();
-    } else if (key == KeyEvent.VK_Y) {
-      po.ot.thetaZ += ObjectTransformation.DELTA_ROT;
-      repaint();
-    } else if (key == KeyEvent.VK_H) {
-      po.ot.thetaZ -= ObjectTransformation.DELTA_ROT;
-      repaint();
-    } else if (key == KeyEvent.VK_Z) {
-      po.resetVertices();
-      repaint();
+    switch (key) {
+      case KeyEvent.VK_D:
+        po.ot.dx += ObjectTransformation.DELTA_TRANSL;
+        break;
+      case KeyEvent.VK_A:
+        po.ot.dx -= ObjectTransformation.DELTA_TRANSL;
+        break;
+      case KeyEvent.VK_W:
+        po.ot.dy += ObjectTransformation.DELTA_TRANSL;
+        break;
+      case KeyEvent.VK_S:
+        po.ot.dy -= ObjectTransformation.DELTA_TRANSL;
+        break;
+      case KeyEvent.VK_Q:
+        po.ot.sx += ObjectTransformation.DELTA_SCAL;
+        po.ot.sy += ObjectTransformation.DELTA_SCAL;
+        po.ot.sz += ObjectTransformation.DELTA_SCAL;
+        break;
+      case KeyEvent.VK_E:
+        po.ot.sx -= ObjectTransformation.DELTA_SCAL;
+        po.ot.sy -= ObjectTransformation.DELTA_SCAL;
+        po.ot.sz -= ObjectTransformation.DELTA_SCAL;
+        break;
+      case KeyEvent.VK_R:
+        po.ot.thetaX += ObjectTransformation.DELTA_ROT;
+        break;
+      case KeyEvent.VK_F:
+        po.ot.thetaX -= ObjectTransformation.DELTA_ROT;
+        break;
+      case KeyEvent.VK_T:
+        po.ot.thetaY += ObjectTransformation.DELTA_ROT;
+        break;
+      case KeyEvent.VK_G:
+        po.ot.thetaY -= ObjectTransformation.DELTA_ROT;
+        break;
+      case KeyEvent.VK_Y:
+        po.ot.thetaZ += ObjectTransformation.DELTA_ROT;
+        break;
+      case KeyEvent.VK_H:
+        po.ot.thetaZ -= ObjectTransformation.DELTA_ROT;
+        break;
+      case KeyEvent.VK_UP:
+        n += ObjectTransformation.DELTA_TRANSL;
+        break;
+      case KeyEvent.VK_DOWN:
+        n -= ObjectTransformation.DELTA_TRANSL;
+        break;
+      case KeyEvent.VK_LEFT:
+        u += ObjectTransformation.DELTA_TRANSL;
+        break;
+      case KeyEvent.VK_RIGHT:
+        u -= ObjectTransformation.DELTA_TRANSL;
+        break;
+      case KeyEvent.VK_CONTROL:
+        v += ObjectTransformation.DELTA_TRANSL;
+        break;
+      case KeyEvent.VK_SPACE:
+        v -= ObjectTransformation.DELTA_TRANSL;
+        break;
+      case KeyEvent.VK_1:
+        cameraTy += ObjectTransformation.DELTA_ROT;
+        u -= ObjectTransformation.DELTA_TRANSL;
+        n += ObjectTransformation.DELTA_TRANSL;
+        break;
+      case KeyEvent.VK_2:
+        cameraTy -= ObjectTransformation.DELTA_ROT;
+        u += ObjectTransformation.DELTA_TRANSL;
+        n -= ObjectTransformation.DELTA_TRANSL;
+        break;
+      case KeyEvent.VK_3:
+        cameraTx += ObjectTransformation.DELTA_ROT;
+        v -= ObjectTransformation.DELTA_TRANSL;
+        break;
+      case KeyEvent.VK_4:
+        cameraTx -= ObjectTransformation.DELTA_ROT;
+        v += ObjectTransformation.DELTA_TRANSL;
+        break;
+      case KeyEvent.VK_Z:
+        po.resetVertices();
+        break;
     }
-  }
+
+    repaint();
+
+  }// Camera es un punto de fuga, todo se mueve para que 0.0.0 este en ese punto
 
   @Override
   public void keyReleased(KeyEvent e) {
@@ -121,10 +169,13 @@ public class Main extends JPanel
     Main main = new Main();
     // Create a PolygonObject
     main.po = new PolygonObject();
+    main.axis = new PolygonObject();
     // Reading takes a long time. Read the file before adding the
     // JPanel to the JFrame.
     main.po.readObject("casita3D.txt");
+    main.axis.readObject("axis3D.txt");
     main.po.setCanvas(main);
+    main.axis.setCanvas(main);
     // En true para que el objeto rote y se escale en torno a sí mismo
     // math.TranslScalRot4x4.CENTER_TRANFORMS = true;
     // Agregar el JPanel al frame

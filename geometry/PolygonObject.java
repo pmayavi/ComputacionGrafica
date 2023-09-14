@@ -5,10 +5,16 @@ import java.util.Scanner;
 
 import math.Matrix4x4;
 import math.TranslScalRot4x4;
+import math.Translation4x4;
 import math.Projection4x4;
+import math.RotationX4x4;
+import math.RotationY4x4;
 import math.Vector4;
 import java.io.File;
 import display.Main;
+
+import java.awt.Color;
+import java.awt.Graphics;
 
 public class PolygonObject {
     ArrayList<Vector4> vertices;
@@ -76,6 +82,27 @@ public class PolygonObject {
         }
     }
 
+    public void drawColor(Graphics g) {
+        if (this.canvas != null) {
+            g.setColor(Color.GREEN);
+            int i = 0;
+            for (Edge e : edges) {
+                // draw the transformed edges
+                Vector4 v1 = transformedVertices.get(e.start);
+                Vector4 v2 = transformedVertices.get(e.end);
+                int x1 = (int) v1.vector[0];
+                int y1 = (int) v1.vector[1];
+                int x2 = (int) v2.vector[0];
+                int y2 = (int) v2.vector[1];
+                canvas.drawOneLine(x1, y1, x2, y2);
+                if (++i == 2)
+                    g.setColor(Color.BLUE);
+                else
+                    g.setColor(Color.RED);
+            }
+        }
+    }
+
     public void resetVertices() {
         ot.reset();
         transformedVertices.clear();
@@ -85,11 +112,18 @@ public class PolygonObject {
         }
     }
 
-    public void transformObject() {
+    public void transformObject(double u, double v, double n, double cameraTx, double cameraTy) {
+        Matrix4x4 ct = new Translation4x4(u, v, n);
+        Matrix4x4 crx = new RotationX4x4(cameraTx);
+        Matrix4x4 cry = new RotationY4x4(cameraTy);
         transformedVertices.clear();
         TranslScalRot4x4 tsr = ot.createTransformation();
-        for (Vector4 v : vertices) {
-            Vector4 newVertex = Matrix4x4.times(tsr, v);
+        for (Vector4 ver : vertices) {
+            Vector4 newVertex = ver;
+            newVertex = Matrix4x4.times(crx, newVertex);
+            newVertex = Matrix4x4.times(cry, newVertex);
+            newVertex = Matrix4x4.times(tsr, newVertex);
+            newVertex = Matrix4x4.times(ct, newVertex);
             transformedVertices.add(newVertex);
         }
     }
