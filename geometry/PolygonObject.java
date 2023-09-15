@@ -3,6 +3,7 @@ package geometry;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import ThirdDimension.Main;
 import math.Matrix4x4;
 import math.TranslScalRot4x4;
 import math.Translation4x4;
@@ -11,8 +12,6 @@ import math.RotationX4x4;
 import math.RotationY4x4;
 import math.Vector4;
 import java.io.File;
-import display.Main;
-
 import java.awt.Color;
 import java.awt.Graphics;
 
@@ -113,9 +112,9 @@ public class PolygonObject {
     }
 
     public void transformObject(double u, double v, double n, double cameraTx, double cameraTy) {
-        Matrix4x4 ct = new Translation4x4(u, v, n);
         Matrix4x4 crx = new RotationX4x4(cameraTx);
         Matrix4x4 cry = new RotationY4x4(cameraTy);
+        Matrix4x4 ct = new Translation4x4(u, v, n);
         transformedVertices.clear();
         TranslScalRot4x4 tsr = ot.createTransformation();
         for (Vector4 ver : vertices) {

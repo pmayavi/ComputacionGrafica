@@ -1,4 +1,4 @@
-package display;
+package ThirdDimension;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -15,8 +15,8 @@ import java.awt.Graphics;
 public class Main extends JPanel
     implements KeyListener {
 
-  static final int WIDTH = 800;
-  static final int HEIGHT = 600;
+  static final int WIDTH = 1400;
+  static final int HEIGHT = 800;
   public double u = 0, v = 0, n = 0;
   public double cameraTy = 0, cameraTx = 0;
 
@@ -24,6 +24,7 @@ public class Main extends JPanel
 
   PolygonObject po;
   PolygonObject axis;
+  PolygonObject floor;
 
   public Main() {
     setFocusable(true);
@@ -45,14 +46,6 @@ public class Main extends JPanel
     po.projectObject();
     po.draw();
 
-  }
-
-  public void drawAxis(Graphics g) {
-    g.setColor(Color.RED);
-    drawOneLine(-100 + (int) u, (int) v, 100 + (int) u, (int) v);
-
-    g.setColor(Color.GREEN);
-    drawOneLine((int) u, -100 + (int) v, (int) u, 100 + (int) v);
   }
 
   public void drawOneLine(int x1, int y1, int x2, int y2) {
@@ -130,22 +123,20 @@ public class Main extends JPanel
         v -= ObjectTransformation.DELTA_TRANSL;
         break;
       case KeyEvent.VK_1:
+        cameraTx += ObjectTransformation.DELTA_ROT;
+        break;
+      case KeyEvent.VK_2:
+        cameraTx -= ObjectTransformation.DELTA_ROT;
+        break;
+      case KeyEvent.VK_3:
         cameraTy += ObjectTransformation.DELTA_ROT;
         u -= ObjectTransformation.DELTA_TRANSL;
         n += ObjectTransformation.DELTA_TRANSL;
         break;
-      case KeyEvent.VK_2:
+      case KeyEvent.VK_4:
         cameraTy -= ObjectTransformation.DELTA_ROT;
         u += ObjectTransformation.DELTA_TRANSL;
         n -= ObjectTransformation.DELTA_TRANSL;
-        break;
-      case KeyEvent.VK_3:
-        cameraTx += ObjectTransformation.DELTA_ROT;
-        v -= ObjectTransformation.DELTA_TRANSL;
-        break;
-      case KeyEvent.VK_4:
-        cameraTx -= ObjectTransformation.DELTA_ROT;
-        v += ObjectTransformation.DELTA_TRANSL;
         break;
       case KeyEvent.VK_Z:
         po.resetVertices();
@@ -168,13 +159,14 @@ public class Main extends JPanel
     // Agregar un JPanel que se llama Main (esta clase)
     Main main = new Main();
     // Create a PolygonObject
-    main.po = new PolygonObject();
-    main.axis = new PolygonObject();
     // Reading takes a long time. Read the file before adding the
     // JPanel to the JFrame.
+    main.po = new PolygonObject();
     main.po.readObject("casita3D.txt");
-    main.axis.readObject("axis3D.txt");
     main.po.setCanvas(main);
+
+    main.axis = new PolygonObject();
+    main.axis.readObject("axis3D.txt");
     main.axis.setCanvas(main);
     // En true para que el objeto rote y se escale en torno a sí mismo
     // math.TranslScalRot4x4.CENTER_TRANFORMS = true;

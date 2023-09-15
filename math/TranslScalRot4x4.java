@@ -24,11 +24,16 @@ public class TranslScalRot4x4 extends Matrix4x4 {
             double thetaX, double thetaY, double thetaZ,
             double centerX, double centerY, double centerZ) {
         super();
-        matrix = Matrix4x4.times(this, new Translation4x4(dx, dy, dz)).matrix;
+        // Regresar al centro
+        matrix = Matrix4x4.times(this, new Translation4x4(centerX + dx, centerY + dy, centerZ + dz)).matrix;
+        // Scaling
         matrix = Matrix4x4.times(this, new Scaling4x4(sx, sy, sz)).matrix;
+        // Rotaciones
         matrix = Matrix4x4.times(this, new RotationX4x4(thetaX)).matrix;
         matrix = Matrix4x4.times(this, new RotationY4x4(thetaY)).matrix;
         matrix = Matrix4x4.times(this, new RotationZ4x4(thetaZ)).matrix;
+        // Traslacion
+        matrix = Matrix4x4.times(this, new Translation4x4(-centerX, -centerY, -centerZ)).matrix;
     }
 
 }
