@@ -6,10 +6,7 @@ import java.util.Scanner;
 import ThirdDimension.Main;
 import math.Matrix4x4;
 import math.TranslScalRot4x4;
-import math.Translation4x4;
 import math.Projection4x4;
-import math.RotationX4x4;
-import math.RotationY4x4;
 import math.Vector4;
 import java.io.File;
 import java.awt.Color;
@@ -111,18 +108,12 @@ public class PolygonObject {
         }
     }
 
-    public void transformObject(double u, double v, double n, double cameraTx, double cameraTy) {
-        Matrix4x4 crx = new RotationX4x4(cameraTx);
-        Matrix4x4 cry = new RotationY4x4(cameraTy);
-        Matrix4x4 ct = new Translation4x4(u, v, n);
+    public void transformObject() {
         transformedVertices.clear();
         TranslScalRot4x4 tsr = ot.createTransformation();
         for (Vector4 ver : vertices) {
             Vector4 newVertex = ver;
-            newVertex = Matrix4x4.times(crx, newVertex);
-            newVertex = Matrix4x4.times(cry, newVertex);
             newVertex = Matrix4x4.times(tsr, newVertex);
-            newVertex = Matrix4x4.times(ct, newVertex);
             transformedVertices.add(newVertex);
         }
     }

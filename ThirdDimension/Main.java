@@ -24,7 +24,6 @@ public class Main extends JPanel
 
   PolygonObject po;
   PolygonObject axis;
-  PolygonObject floor;
 
   public Main() {
     setFocusable(true);
@@ -37,12 +36,15 @@ public class Main extends JPanel
     super.paintComponent(g);
 
     this.g = g;
-    axis.transformObject(u, v, n, cameraTx, cameraTy);
+
+    setCamera(axis);
+    axis.transformObject();
     axis.projectObject();
     axis.drawColor(g);
 
     g.setColor(Color.BLACK);
-    po.transformObject(u, v, n, cameraTx, cameraTy);
+    setCamera(po);
+    po.transformObject();
     po.projectObject();
     po.draw();
 
@@ -54,6 +56,14 @@ public class Main extends JPanel
     x2 = x2 + WIDTH / 2;
     y2 = HEIGHT / 2 - y2;
     g.drawLine(x1, y1, x2, y2);
+  }
+
+  public void setCamera(PolygonObject obj) {
+    obj.ot.u = u;
+    obj.ot.v = v;
+    obj.ot.n = n;
+    obj.ot.cameraTx = cameraTx;
+    obj.ot.cameraTy = cameraTy;
   }
 
   @Override
@@ -75,6 +85,12 @@ public class Main extends JPanel
         break;
       case KeyEvent.VK_S:
         po.ot.dy -= ObjectTransformation.DELTA_TRANSL;
+        break;
+      case KeyEvent.VK_X:
+        po.ot.dz += ObjectTransformation.DELTA_TRANSL;
+        break;
+      case KeyEvent.VK_C:
+        po.ot.dz -= ObjectTransformation.DELTA_TRANSL;
         break;
       case KeyEvent.VK_Q:
         po.ot.sx += ObjectTransformation.DELTA_SCAL;
@@ -123,28 +139,26 @@ public class Main extends JPanel
         v -= ObjectTransformation.DELTA_TRANSL;
         break;
       case KeyEvent.VK_1:
-        cameraTx += ObjectTransformation.DELTA_ROT;
+        if (cameraTx < 1)
+          cameraTx += ObjectTransformation.DELTA_ROT;
         break;
       case KeyEvent.VK_2:
-        cameraTx -= ObjectTransformation.DELTA_ROT;
+        if (cameraTx > -1)
+          cameraTx -= ObjectTransformation.DELTA_ROT;
         break;
       case KeyEvent.VK_3:
+        // if (cameraTy < 1)
         cameraTy += ObjectTransformation.DELTA_ROT;
-        u -= ObjectTransformation.DELTA_TRANSL;
-        n += ObjectTransformation.DELTA_TRANSL;
         break;
       case KeyEvent.VK_4:
+        // if (cameraTy > -1)
         cameraTy -= ObjectTransformation.DELTA_ROT;
-        u += ObjectTransformation.DELTA_TRANSL;
-        n -= ObjectTransformation.DELTA_TRANSL;
         break;
       case KeyEvent.VK_Z:
         po.resetVertices();
         break;
     }
-
     repaint();
-
   }// Camera es un punto de fuga, todo se mueve para que 0.0.0 este en ese punto
 
   @Override
