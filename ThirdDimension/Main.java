@@ -19,6 +19,7 @@ public class Main extends JPanel
   static final int HEIGHT = 800;
   public double u = 0, v = 0, n = 0;
   public double cameraTy = 0, cameraTx = 0;
+  public boolean cameraFollow = false;
 
   Graphics g;
 
@@ -64,6 +65,7 @@ public class Main extends JPanel
     obj.ot.n = n;
     obj.ot.cameraTx = cameraTx;
     obj.ot.cameraTy = cameraTy;
+    obj.ot.cameraFollow = cameraFollow;
   }
 
   @Override
@@ -139,23 +141,49 @@ public class Main extends JPanel
         v -= ObjectTransformation.DELTA_TRANSL;
         break;
       case KeyEvent.VK_1:
-        if (cameraTx < 1)
-          cameraTx += ObjectTransformation.DELTA_ROT;
+        cameraTy += ObjectTransformation.DELTA_ROT;
+        cameraFollow = false;
         break;
       case KeyEvent.VK_2:
-        if (cameraTx > -1)
-          cameraTx -= ObjectTransformation.DELTA_ROT;
+        cameraTy -= ObjectTransformation.DELTA_ROT;
+        cameraFollow = false;
         break;
       case KeyEvent.VK_3:
-        // if (cameraTy < 1)
-        cameraTy += ObjectTransformation.DELTA_ROT;
+        if (cameraTx < 1)
+          cameraTx += ObjectTransformation.DELTA_ROT;
+        cameraFollow = false;
         break;
       case KeyEvent.VK_4:
-        // if (cameraTy > -1)
-        cameraTy -= ObjectTransformation.DELTA_ROT;
+        if (cameraTx > -1)
+          cameraTx -= ObjectTransformation.DELTA_ROT;
+        cameraFollow = false;
         break;
+      case KeyEvent.VK_6:
+        cameraTy += ObjectTransformation.DELTA_ROT;
+        cameraFollow = true;
+        break;
+      case KeyEvent.VK_7:
+        cameraTy -= ObjectTransformation.DELTA_ROT;
+        cameraFollow = true;
+        break;
+      case KeyEvent.VK_8:
+        if (cameraTx < 1)
+          cameraTx += ObjectTransformation.DELTA_ROT;
+        cameraFollow = true;
+        break;
+      case KeyEvent.VK_9:
+        if (cameraTx > -1)
+          cameraTx -= ObjectTransformation.DELTA_ROT;
+        cameraFollow = true;
+        break;
+      case KeyEvent.VK_5:
       case KeyEvent.VK_Z:
         po.resetVertices();
+        u = 0;
+        v = 0;
+        n = 0;
+        cameraTx = 0;
+        cameraTy = 0;
         break;
     }
     repaint();

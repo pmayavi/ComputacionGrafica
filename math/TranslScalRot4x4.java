@@ -10,15 +10,22 @@ public class TranslScalRot4x4 extends Matrix4x4 {
             double thetaX, double thetaY, double thetaZ,
             double centerX, double centerY, double centerZ,
             double u, double v, double n,
-            double cameraTx, double cameraTy) {
+            double cameraTx, double cameraTy, boolean cameraFollow) {
         super();
         // Camara
         matrix = Matrix4x4.times(this, new Translation4x4(u, v, n)).matrix;
+        if (cameraFollow)
+            matrix = Matrix4x4.times(this, new Translation4x4(centerX, centerY, centerZ)).matrix;
+
         matrix = Matrix4x4.times(this, new RotationX4x4(cameraTx)).matrix;
         matrix = Matrix4x4.times(this, new RotationY4x4(cameraTy)).matrix;
 
         // Regresar al centro
-        matrix = Matrix4x4.times(this, new Translation4x4(centerX + dx, centerY + dy, centerZ + dz)).matrix;
+        if (cameraFollow)
+            matrix = Matrix4x4.times(this, new Translation4x4(dx, dy, dz)).matrix;
+        else
+            matrix = Matrix4x4.times(this, new Translation4x4(centerX + dx, centerY + dy, centerZ + dz)).matrix;
+
         // Scaling
         matrix = Matrix4x4.times(this, new Scaling4x4(sx, sy, sz)).matrix;
         // Rotaciones

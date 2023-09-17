@@ -22,6 +22,7 @@ public class ObjectTransformation {
     public double n;
     public double cameraTx;
     public double cameraTy;
+    public boolean cameraFollow;
 
     public static final double DELTA_TRANSL = 10;
     public static final double DELTA_SCAL = 0.1;
@@ -45,6 +46,7 @@ public class ObjectTransformation {
         n = 0;
         cameraTx = 0;
         cameraTy = 0;
+        cameraFollow = false;
     }
 
     public TranslScalRot4x4 createTransformation() {
@@ -53,7 +55,7 @@ public class ObjectTransformation {
                 thetaX, thetaY, thetaZ,
                 centerX, centerY, centerZ,
                 u, v, n,
-                cameraTx, cameraTy);
+                cameraTx, cameraTy, cameraFollow);
         return tsr;
     }
 
@@ -77,6 +79,7 @@ public class ObjectTransformation {
         n = 0;
         cameraTx = 0;
         cameraTy = 0;
+        cameraFollow = false;
     }
 
 }
