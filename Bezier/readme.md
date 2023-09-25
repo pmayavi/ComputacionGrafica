@@ -9,7 +9,7 @@
 125 75
 150 150
 ```
-![Imagen 1](URL_DE_LA_IMAGEN_1)
+![Imagen 1](https://raw.githubusercontent.com/pmayavi/ComputacionGrafica/main/Bezier/img1.jpeg)
 
 ## Imagen 2
 ```python
@@ -20,7 +20,7 @@
 50 -50
 100 100
 ```
-![Imagen 2](URL_DE_LA_IMAGEN_2)
+![Imagen 2](https://raw.githubusercontent.com/pmayavi/ComputacionGrafica/main/Bezier/img2.jpeg)
 
 ## Imagen 3
 ```python
@@ -31,7 +31,7 @@
 -90 -110
 100 -100
 ```
-![Imagen 3](URL_DE_LA_IMAGEN_3)
+![Imagen 3](https://raw.githubusercontent.com/pmayavi/ComputacionGrafica/main/Bezier/img3.jpeg)
 
 ## Imagen 4
 ```python
@@ -43,7 +43,7 @@
 0 100
 100 -100
 ```
-![Imagen 4](URL_DE_LA_IMAGEN_4)
+![Imagen 4](https://raw.githubusercontent.com/pmayavi/ComputacionGrafica/main/Bezier/img4.jpeg)
 
 ## Imagen 5
 ```python
@@ -57,4 +57,4 @@
 0 100
 100 -100
 ```
-![Imagen 5](URL_DE_LA_IMAGEN_5)
+![Imagen 5](https://raw.githubusercontent.com/pmayavi/ComputacionGrafica/main/Bezier/img5.jpeg)
